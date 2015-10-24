@@ -23,6 +23,7 @@ import android.view.Display;
 import android.view.View;
 
 import com.ems.bloodglucose.App;
+import com.ems.bloodglucose.R;
 
 import java.lang.reflect.Field;
 
@@ -75,19 +76,19 @@ public class TVVideoSelectionFragment extends BrowseFragment {
     private void initializeBackgroundManager() {
         backgroundManager = BackgroundManager.getInstance(getActivity());
         backgroundManager.attach(getActivity().getWindow());
-        backgroundManager.setColor(getResources().getColor(com.ems.bloodglucose.R.color.app_theme_color));
+        backgroundManager.setColor(getResources().getColor(R.color.app_theme_color));
     }
 
     private void setupUIElements() {
-        setTitle(getString(com.ems.bloodglucose.R.string.app_name));
-        setBadgeDrawable(getResources().getDrawable(com.ems.bloodglucose.R.drawable.ic_launcher));
+        setTitle(getString(R.string.app_name));
+        setBadgeDrawable(getResources().getDrawable(R.drawable.ic_launcher));
 
         setHeadersState(HEADERS_DISABLED);
         enableSearchSelectionWorkaround();
         setHeadersTransitionOnBackEnabled(true);
 
-        setBrandColor(getResources().getColor(com.ems.bloodglucose.R.color.default_text));
-        setSearchAffordanceColor(getResources().getColor(com.ems.bloodglucose.R.color.default_background));
+        setBrandColor(getResources().getColor(R.color.default_text));
+        setSearchAffordanceColor(getResources().getColor(R.color.default_background));
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         display.getSize(displaySize);

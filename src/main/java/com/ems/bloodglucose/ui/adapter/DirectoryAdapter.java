@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.devbrackets.android.recyclerext.adapter.RecyclerCursorAdapter;
+import com.ems.bloodglucose.R;
 import com.ems.bloodglucose.domain.main.individual.Individual;
 import com.ems.bloodglucose.event.DirectoryItemClickedEvent;
 
@@ -32,15 +33,15 @@ public class DirectoryAdapter extends RecyclerCursorAdapter<DirectoryAdapter.Vie
     private ViewHolder lastSelectedViewHolder;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(com.ems.bloodglucose.R.id.text1)
+        @Bind(R.id.text1)
         TextView text1TextView;
-        @Bind(com.ems.bloodglucose.R.id.list_item)
+        @Bind(R.id.list_item)
         View listItemView;
 
         // dual pane items
-        @Bind(com.ems.bloodglucose.R.id.list_item_full_layout)
+        @Bind(R.id.list_item_full_layout)
         View listItemFullLayout;
-        @Bind(com.ems.bloodglucose.R.id.listview_sidebar_selected)
+        @Bind(R.id.listview_sidebar_selected)
         View sideBarSelectedView;
 
         public ViewHolder(View view) {
@@ -68,7 +69,7 @@ public class DirectoryAdapter extends RecyclerCursorAdapter<DirectoryAdapter.Vie
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = inflater.inflate(com.ems.bloodglucose.R.layout.list_item_dual_pane, viewGroup, false);
+        View view = inflater.inflate(R.layout.list_item_dual_pane, viewGroup, false);
         return new ViewHolder(view);
     }
 

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ems.bloodglucose.BuildConfig;
+import com.ems.bloodglucose.R;
 import com.ems.bloodglucose.domain.attached.crossdatabasequery.CrossDatabaseQuery;
 import com.ems.bloodglucose.domain.attached.crossdatabasequery.CrossDatabaseQueryManager;
 import com.ems.bloodglucose.domain.main.household.Household;
@@ -60,10 +61,10 @@ import retrofit.Retrofit;
 public class AboutActivity extends BaseActivity {
     public static final String TAG = App.createTag(AboutActivity.class);
 
-    @Bind(com.ems.bloodglucose.R.id.version_info)
+    @Bind(R.id.version_info)
     TextView versionTextView;
 
-    @Bind(com.ems.bloodglucose.R.id.ab_toolbar)
+    @Bind(R.id.ab_toolbar)
     Toolbar toolbar;
 
     @Inject
@@ -75,7 +76,7 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.ems.bloodglucose.R.layout.activity_about);
+        setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
         App.getInjectComponent(this).inject(this);
 
@@ -112,7 +113,7 @@ public class AboutActivity extends BaseActivity {
         return versionString;
     }
 
-    @OnClick(com.ems.bloodglucose.R.id.create_database_button)
+    @OnClick(R.id.create_database_button)
     public void onCreateDatabaseButtonClick() {
         createSampleData();
     }
@@ -359,7 +360,7 @@ public class AboutActivity extends BaseActivity {
     @Inject
     WebServiceUtil webServiceUtil;
 
-    @OnClick(com.ems.bloodglucose.R.id.rest_test_button)
+    @OnClick(R.id.rest_test_button)
     public void testQueryWebServiceCall() {
         Call<DtoSearchResponse> call = webSearchService.search("Cat");
 

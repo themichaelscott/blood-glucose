@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ems.bloodglucose.R;
 import com.ems.bloodglucose.ui.DirectoryActivity;
 import com.ems.bloodglucose.App;
 import com.ems.bloodglucose.domain.DatabaseManager;
@@ -52,6 +53,6 @@ public class StartupTask extends AsyncTask<String, Void, Boolean> {
 
         contextActivity.startActivity(i);
         contextActivity.finish();
-        contextActivity.overridePendingTransition(com.ems.bloodglucose.R.anim.fade_in, com.ems.bloodglucose.R.anim.nothing); // no animation
+        contextActivity.overridePendingTransition(R.anim.fade_in, R.anim.nothing); // no animation
     }
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.ems.bloodglucose.R;
 import com.ems.bloodglucose.domain.main.individual.Individual;
 import com.ems.bloodglucose.event.IndividualSavedEvent;
 import com.google.android.gms.analytics.HitBuilders;
@@ -35,19 +36,19 @@ public class IndividualEditFragment extends Fragment {
 
     private static final String ARG_ID = "ID";
 
-    @Bind(com.ems.bloodglucose.R.id.first_name_layout)
+    @Bind(R.id.first_name_layout)
     TextInputLayout firstNameLayout;
 
-    @Bind(com.ems.bloodglucose.R.id.first_name)
+    @Bind(R.id.first_name)
     EditText firstNameEditText;
 
-    @Bind(com.ems.bloodglucose.R.id.last_name)
+    @Bind(R.id.last_name)
     EditText lastNameEditText;
 
-    @Bind(com.ems.bloodglucose.R.id.phone)
+    @Bind(R.id.phone)
     EditText phoneEditText;
 
-    @Bind(com.ems.bloodglucose.R.id.email)
+    @Bind(R.id.email)
     EditText emailEditText;
 
     @Inject
@@ -81,7 +82,7 @@ public class IndividualEditFragment extends Fragment {
     @Override
     public View onCreateView(@Nonnull LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(com.ems.bloodglucose.R.layout.fragment_individual_edit, container, false);
+        View view = inflater.inflate(R.layout.fragment_individual_edit, container, false);
         ButterKnife.bind(this, view);
 
         showIndividual();
@@ -91,14 +92,14 @@ public class IndividualEditFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(com.ems.bloodglucose.R.menu.individual_edit_menu, menu);
+        inflater.inflate(R.menu.individual_edit_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case com.ems.bloodglucose.R.id.menu_item_save:
+            case R.id.menu_item_save:
                 saveIndividual();
                 return true;
             default:
@@ -129,7 +130,7 @@ public class IndividualEditFragment extends Fragment {
         Individual individual = individualId > 0 ? individualManager.findByRowId(individualId) : new Individual();
         if (individual != null) {
             if (StringUtils.isBlank(firstNameEditText.getText())) {
-                firstNameLayout.setError(getString(com.ems.bloodglucose.R.string.required));
+                firstNameLayout.setError(getString(R.string.required));
                 return;
             }
 

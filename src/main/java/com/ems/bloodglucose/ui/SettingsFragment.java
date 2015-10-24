@@ -7,13 +7,14 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.Toolbar;
 
 import com.ems.bloodglucose.App;
+import com.ems.bloodglucose.R;
 
 import butterknife.Bind;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener,
         Preference.OnPreferenceClickListener {
 
-    @Bind(com.ems.bloodglucose.R.id.ab_toolbar)
+    @Bind(R.id.ab_toolbar)
     Toolbar toolbar;
 
     public static SettingsFragment newInstance() {
@@ -28,7 +29,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        addPreferencesFromResource(com.ems.bloodglucose.R.xml.preferences);
+        addPreferencesFromResource(R.xml.preferences);
     }
 
     @Override

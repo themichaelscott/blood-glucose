@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.ems.bloodglucose.R;
 import com.ems.bloodglucose.ui.menu.DrawerMenu;
 
 import javax.annotation.Nonnull;
@@ -20,10 +21,10 @@ public abstract class DrawerActivity extends BaseActivity {
     @Inject
     DrawerMenu drawerMenu;
 
-    @Bind(com.ems.bloodglucose.R.id.drawer_layout)
+    @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
-    @Bind(com.ems.bloodglucose.R.id.nav_view)
+    @Bind(R.id.nav_view)
     NavigationView navigationView;
 
     private boolean homeIsBackButton;
@@ -46,7 +47,7 @@ public abstract class DrawerActivity extends BaseActivity {
     public void setupDrawerWithDrawerButton(@Nonnull Toolbar toolbar, @StringRes int titleResId) {
         homeIsBackButton = false;
         init(toolbar, titleResId);
-        toolbar.setNavigationIcon(com.ems.bloodglucose.R.drawable.ic_menu_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_24dp);
     }
 
     @Override

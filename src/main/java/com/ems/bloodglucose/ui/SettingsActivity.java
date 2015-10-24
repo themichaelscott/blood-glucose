@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.ems.bloodglucose.App;
+import com.ems.bloodglucose.R;
 
 
 public class SettingsActivity extends BaseActivity {
@@ -11,12 +12,12 @@ public class SettingsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getInjectComponent(this).inject(this);
-        setContentView(com.ems.bloodglucose.R.layout.activity_single_fragment_no_toolbar);
+        setContentView(R.layout.activity_single_fragment_no_toolbar);
 
         enableActionBarBackArrow(true);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(com.ems.bloodglucose.R.id.fragment_pos1, SettingsFragment.newInstance()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_pos1, SettingsFragment.newInstance()).commit();
         }
     }
 
