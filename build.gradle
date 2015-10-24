@@ -1,0 +1,284 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.4.0-beta6'
+        classpath 'org.dbtools:gradle-dbtools-plugin:4.0.2'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3' // version plugin support
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'dbtools'
+apply plugin: 'sonar-runner'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.ben-manes.versions' // ./gradlew dependencyUpdates -Drevision=release
+
+def artOnly = false; // enable a fast build supported ONLY by Android 5.0+
+
+// Manifest version information
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+def versionBuild = 0
+def versionMajorMinorPatch = "${versionMajor}.${versionMinor}.${versionPatch}"
+def versionMajorMinorPatchBuild = "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}"
+def buildTime = new Date().getTime()
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    // Android
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:recyclerview-v7:23.1.0'
+    compile 'com.android.support:preference-v7:23.1.0'
+    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:support-annotations:23.1.0' // includes support-v4
+    compile 'com.android.support:leanback-v17:23.1.0' // Support for AndroidTV
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.google.android.gms:play-services-analytics:8.1.0'
+
+    // UI
+    compile 'com.vikingsen:pocketknife-core:3.1.0'
+    provided 'com.vikingsen:pocketknife-compiler:3.1.0'
+    compile 'com.jakewharton:butterknife:7.0.1'
+
+    // Code
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
+    compile 'com.google.code.gson:gson:2.4' // override the version from retrofit
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'joda-time:joda-time:2.8.2'
+    compile 'org.dbtools:dbtools-android:4.0.2'
+    compile 'org.dbtools:dbtools-query:2.5.6'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'commons-io:commons-io:2.4'
+    compile 'com.devbrackets.android:recyclerext:0.12.0'
+
+    // Dagger 2
+    compile 'com.google.dagger:dagger:2.0.1'
+    provided 'com.google.dagger:dagger-compiler:2.0.1'
+    provided 'javax.annotation:javax.annotation-api:1.2' // Dagger 2 dependency which is not available in Java 6
+
+    // Greenrobot EventBus
+    compile 'de.greenrobot:eventbus:3.0.0-beta1'
+    provided 'de.greenrobot:eventbus-annotation-processor:3.0.0-beta1'
+
+    // Custom SQLite database
+//    compile 'org.sqlite:sqlite-android:3.8.9.0-20150415'
+//    compile 'net.sqlcipher:sqlcipher-aar:3.1.0.20140823'
+
+    // Test (Integration)
+    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.1') {exclude module: 'jsr305'}
+    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    androidTestCompile 'com.android.support:support-annotations:23.1.0' // fix dependency conflict warning
+//    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    // Test (Unit)
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.0.31-beta'
+
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 23
+
+        if (artOnly) {
+            minSdkVersion 21 // temp enable to perform faster builds
+        }
+
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName versionMajorMinorPatch
+        buildConfigField "long", "BUILD_TIME", "${buildTime}l"
+        buildConfigField "String", "ANALYTICS_KEY", "\"${getAnalyticsKey()}\""
+
+        multiDexEnabled true
+
+        // Enable the experimental Jack build tools. (note... may not work with shrinking enabled)
+        // useJack = true
+
+        // Espresso
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    // Prevent OutOfMemory errors
+//    dexOptions {
+//        incremental true
+//        javaMaxHeapSize "4g"
+//    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'LICENSE.txt'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    // set dummy signing values if not defined in ~/.gradle/gradle.properties
+    if (!project.hasProperty('myKeystore')) {
+        println "Using dummy signing values"
+        project.ext.setProperty('myKeystore', 'dummy')
+        project.ext.setProperty('myKeystorePassword', 'dummy')
+        project.ext.setProperty('myKeyAlias', 'dummy')
+        project.ext.setProperty('myKeyPassword', 'dummy')
+    }
+
+    // defined values my* in ~/.gradle/gradle.properties
+    signingConfigs {
+        prodConfig {
+            storeFile file(myKeystore)
+            storePassword myKeystorePassword
+            keyAlias myKeyAlias
+            keyPassword myKeyPassword
+        }
+    }
+
+    buildTypes {
+        debug {
+            versionNameSuffix '-DEV'
+            applicationIdSuffix '.dev'
+            buildConfigField "String", "VERSION_NAME_FULL", "\"${versionMajorMinorPatchBuild}-DEV\""
+//            signingConfig signingConfigs.prodConfig
+        }
+        alpha {
+            initWith(buildTypes.release)
+            versionNameSuffix '-ALPHA'
+            applicationIdSuffix '.dev'
+            buildConfigField "String", "VERSION_NAME_FULL", "\"${versionMajorMinorPatchBuild}-ALPHA\""
+            debuggable true
+            signingConfig signingConfigs.prodConfig
+        }
+        beta {
+            initWith(buildTypes.release)
+            versionNameSuffix '-BETA'
+            buildConfigField "String", "VERSION_NAME_FULL", "\"${versionMajorMinorPatchBuild}-BETA\""
+            signingConfig signingConfigs.prodConfig
+        }
+        release {
+            buildConfigField "String", "VERSION_NAME_FULL", "\"${versionMajorMinorPatchBuild}\""
+            versionNameSuffix ''
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.prodConfig
+        }
+    }
+}
+
+//sonarRunner {
+//    sonarProperties {
+//        if (!project.hasProperty('mySonarHostUrl')) {
+//            println '!!!! Sonar properties must be set in your //gradle.properties !!!!'
+//            return
+//       }
+//
+//        // Project Information
+//        property 'sonar.projectKey', 'BloodGlucose'
+//        property 'sonar.projectName', 'BloodGlucose'
+//        property "sonar.projectVersion", versionMajorMinorPatchBuild
+//
+//        property 'sonar.links.homepage', 'https://github.com/jeffdcamp/android-template'
+//        property 'sonar.links.issue', 'https://github.com/jeffdcamp/android-template/issues'
+//        property 'sonar.links.scm', 'https://github.com/jeffdcamp/android-template.git'
+//
+//        // Sonar Information (defined in gradle.properties)
+//        property "sonar.host.url", mySonarHostUrl
+//        property "sonar.jdbc.url", mySonarJdbcUrl
+//        property "sonar.jdbc.driverClassName", mySonarJdbcDriver
+//        property "sonar.jdbc.username", mySonarUsername
+//        property "sonar.jdbc.password", mySonarPassword
+//
+//
+//        properties["sonar.sources"] = "src/main"//android.sourceSets.main.java.srcDirs
+//        properties["sonar.tests"] = android.sourceSets.androidTest.java.srcDirs
+//        if (file("build/intermediates/classes/debug").exists()) {
+//            properties["sonar.binaries"] = [file("build/intermediates/classes/debug")]
+//        }
+//        if (file("build/intermediates/classes/alpha").exists()) {
+//            properties["sonar.binaries"] = [file("build/intermediates/classes/alpha")]
+//        }
+//    }
+//}
+
+dbtools {
+    type 'ANDROID'
+
+    basePackageName 'org.jdc.template.domain'
+    outputSrcDir 'src/main/java/org/jdc/template/domain'
+
+    injectionSupport true
+    jsr305Support true
+    includeDatabaseNameInPackage true
+    eventBusSupport true
+    dateTimeSupport true
+    sqlQueryBuilderSupport true
+    rxJavaSupport false
+}
+
+// ===== TEST TASKS =====
+
+// show JUnit failure reason in console (the following may fail tests run from IDE)
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat "full"
+    }
+}
+
+// Define coverage source.
+// If you have rs/aidl etc... add them here.
+def coverageSourceDirs = [
+        'src/main/java',
+]
+
+task testDebugJacoco(type: JacocoReport, dependsOn: "testDebug") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+    classDirectories = fileTree(
+            dir: './build/intermediates/classes/debug',
+            excludes: ['**/R*.class',
+                       '**/*$InjectAdapter.class',
+                       '**/*$ModuleAdapter.class',
+                       '**/*$ViewInjector*.class'
+            ])
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files("$buildDir/jacoco/testDebug.exec")
+    // Bit hacky but fixes https://code.google.com/p/android/issues/detail?id=69174.
+    // We iterate through the compiled .class tree and rename $$ to $.
+    doFirst {
+        new File("$buildDir/intermediates/classes/").eachFileRecurse { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
+    }
+}
+
+// Rename and place "myAnalyticsKey" in global gradle.properties
+def getAnalyticsKey() {
+    return hasProperty('myAnalyticsKey') ? myAnalyticsKey : ''
+}
