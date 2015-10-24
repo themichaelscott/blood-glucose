@@ -186,46 +186,46 @@ android {
     }
 }
 
-//sonarRunner {
-//    sonarProperties {
-//        if (!project.hasProperty('mySonarHostUrl')) {
-//            println '!!!! Sonar properties must be set in your //gradle.properties !!!!'
-//            return
-//       }
-//
-//        // Project Information
-//        property 'sonar.projectKey', 'BloodGlucose'
-//        property 'sonar.projectName', 'BloodGlucose'
-//        property "sonar.projectVersion", versionMajorMinorPatchBuild
-//
-//        property 'sonar.links.homepage', 'https://github.com/jeffdcamp/android-template'
-//        property 'sonar.links.issue', 'https://github.com/jeffdcamp/android-template/issues'
-//        property 'sonar.links.scm', 'https://github.com/jeffdcamp/android-template.git'
-//
-//        // Sonar Information (defined in gradle.properties)
-//        property "sonar.host.url", mySonarHostUrl
-//        property "sonar.jdbc.url", mySonarJdbcUrl
-//        property "sonar.jdbc.driverClassName", mySonarJdbcDriver
-//        property "sonar.jdbc.username", mySonarUsername
-//        property "sonar.jdbc.password", mySonarPassword
-//
-//
-//        properties["sonar.sources"] = "src/main"//android.sourceSets.main.java.srcDirs
-//        properties["sonar.tests"] = android.sourceSets.androidTest.java.srcDirs
-//        if (file("build/intermediates/classes/debug").exists()) {
-//            properties["sonar.binaries"] = [file("build/intermediates/classes/debug")]
-//        }
-//        if (file("build/intermediates/classes/alpha").exists()) {
-//            properties["sonar.binaries"] = [file("build/intermediates/classes/alpha")]
-//        }
-//    }
-//}
+sonarRunner {
+    sonarProperties {
+        if (!project.hasProperty('mySonarHostUrl')) {
+            println '!!!! Sonar properties must be set in your //gradle.properties !!!!'
+            return
+       }
+
+        // Project Information
+        property 'sonar.projectKey', 'blood-glucose'
+        property 'sonar.projectName', 'blood-glucose'
+        property "sonar.projectVersion", versionMajorMinorPatchBuild
+
+        property 'sonar.links.homepage', 'https://github.com/themichaelscott/blood-glucose'
+        property 'sonar.links.issue', 'https://github.com/themichaelscott/blood-glucose/issues'
+        property 'sonar.links.scm', 'https://github.com/themichaelscott/blood-glucose.git'
+
+        // Sonar Information (defined in gradle.properties)
+        property "sonar.host.url", mySonarHostUrl
+        property "sonar.jdbc.url", mySonarJdbcUrl
+        property "sonar.jdbc.driverClassName", mySonarJdbcDriver
+        property "sonar.jdbc.username", mySonarUsername
+        property "sonar.jdbc.password", mySonarPassword
+
+
+        properties["sonar.sources"] = "src/main"//android.sourceSets.main.java.srcDirs
+        properties["sonar.tests"] = android.sourceSets.androidTest.java.srcDirs
+        if (file("build/intermediates/classes/debug").exists()) {
+            properties["sonar.binaries"] = [file("build/intermediates/classes/debug")]
+        }
+        if (file("build/intermediates/classes/alpha").exists()) {
+            properties["sonar.binaries"] = [file("build/intermediates/classes/alpha")]
+        }
+    }
+}
 
 dbtools {
     type 'ANDROID'
 
-    basePackageName 'org.jdc.template.domain'
-    outputSrcDir 'src/main/java/org/jdc/template/domain'
+    basePackageName 'com.ems.bloodglucose.domain'
+    outputSrcDir 'src/main/java/com/ems/bloodglucose/domain'
 
     injectionSupport true
     jsr305Support true
